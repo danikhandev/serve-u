@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useUser } from '@/contexts/UserContext';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, MapPin, Calendar, Edit3, Save, Loader2, type LucideIcon } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit3, Save, Loader2, type LucideIcon } from 'lucide-react';
 
 interface UserProfile {
   firstName?: string;
@@ -13,7 +12,7 @@ interface UserProfile {
   address?: string;
 }
 
-export default function UserProfileTab({ user, onSuccess, onError }: { user: UserProfile, onSuccess: (msg: string) => void, onError: (msg: string) => void }) {
+export default function UserProfileTab({ user, onSuccess }: { user: UserProfile, onSuccess: (msg: string) => void, onError?: (msg: string) => void }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -90,7 +89,7 @@ export default function UserProfileTab({ user, onSuccess, onError }: { user: Use
       ) : (
         <div>
           <InfoRow icon={User} label="Full Name" value={`${user.firstName} ${user.lastName}`} />
-          <InfoRow icon={Mail} label="Email Address" value={user.email} />
+          <InfoRow icon={Mail} label="Email Address" value={user.email || "Not provided"} />
           <InfoRow icon={Phone} label="Phone Number" value={user.phone || "Not provided"} />
           <InfoRow icon={MapPin} label="Address" value={user.address || "Not provided"} />
         </div>

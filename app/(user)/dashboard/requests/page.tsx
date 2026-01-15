@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, CheckCircle, XCircle, Search, Calendar, Briefcase } from "lucide-react";
+import { Clock, CheckCircle, XCircle, Calendar, Briefcase } from "lucide-react";
 import Link from "next/link";
 
 // Mock data for service requests

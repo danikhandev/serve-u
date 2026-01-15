@@ -1,15 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  ChevronLeft, 
-  Calendar, 
-  Clock, 
-  DollarSign, 
-  Briefcase, 
-  MessageSquare,
+import {
+  ChevronLeft,
   Star
 } from "lucide-react";
 import Link from "next/link";
@@ -32,13 +27,30 @@ const mockRequests = [
   // Add other mock requests if needed for direct navigation testing
 ];
 
+interface TimelineItem {
+  status: string;
+  date: string;
+  note: string;
+}
+
+interface ServiceRequest {
+  id: string;
+  service: string;
+  worker: string;
+  status: string;
+  date: string;
+  price: number;
+  description: string;
+  timeline: TimelineItem[];
+}
+
 export default function RequestDetailPage() {
   const params = useParams();
-  const [request, setRequest] = useState<any>(null);
+  const [request, setRequest] = useState<ServiceRequest | null>(null);
 
   useEffect(() => {
     const foundRequest = mockRequests.find(r => r.id === params.id);
-    setRequest(foundRequest);
+    setRequest(foundRequest || null);
   }, [params.id]);
 
   if (!request) {
@@ -86,7 +98,7 @@ export default function RequestDetailPage() {
           
           <h3 className="text-lg font-bold text-gray-800 mb-4">Timeline</h3>
           <div className="space-y-6">
-            {request.timeline.map((item: any, index: number) => (
+            {request.timeline.map((item: TimelineItem, index: number) => (
               <div key={index} className="flex gap-4">
                 <div className="relative">
                   <div className={`w-3 h-3 rounded-full mt-1 ${getStatusInfo(item.status).color.replace('text-', 'bg-')}`}></div>

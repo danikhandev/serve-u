@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Search, MapPin, Star, SlidersHorizontal, DollarSign, Award } from "lucide-react";
+import { Search, Star, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { MOCK_WORKERS, SERVICE_CATEGORIES } from "@/constants/mockData";
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
   const initialCategory = searchParams.get("category") || "All";
@@ -18,13 +18,13 @@ export default function SearchPage() {
   const [priceRange, setPriceRange] = useState([0, 200]);
 
   const filteredWorkers = MOCK_WORKERS.filter(worker => {
-    const matchesQuery = 
+    const matchesQuery =
       query === "" ||
-      worker.name.toLowerCase().includes(query.toLowerCase()) || 
+      worker.name.toLowerCase().includes(query.toLowerCase()) ||
       worker.title.toLowerCase().includes(query.toLowerCase()) ||
       worker.bio.toLowerCase().includes(query.toLowerCase()) ||
       worker.services.some(s => s.title.toLowerCase().includes(query.toLowerCase()));
-    
+
     const matchesCategory = category === "All" || worker.category.toLowerCase() === category.toLowerCase();
     const matchesRating = worker.rating >= rating;
     const matchesPrice = worker.hourlyRate >= priceRange[0] && worker.hourlyRate <= priceRange[1];
@@ -37,14 +37,14 @@ export default function SearchPage() {
       {/* Enhanced Hero/Search Section */}
       <div className="bg-primary/5 pt-28 pb-16">
         <div className="container mx-auto px-6 text-center">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
           >
             Find the Perfect Pro for Any Job
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -52,8 +52,8 @@ export default function SearchPage() {
           >
             Search by service, name, or keyword. Filter by category, rating, and price to find your ideal match.
           </motion.p>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
@@ -62,11 +62,11 @@ export default function SearchPage() {
             <div className="flex flex-col md:flex-row gap-4 items-center">
               <div className="flex-1 relative w-full">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="E.g., 'Leaky faucet' or 'John S.'" 
+                  placeholder="E.g., 'Leaky faucet' or 'John S.'"
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border-transparent rounded-xl focus:ring-2 focus:ring-primary text-gray-900"
                 />
               </div>
@@ -81,14 +81,14 @@ export default function SearchPage() {
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
               <h3 className="font-bold text-lg mb-6">Filters</h3>
-              
+
               {/* Category Filter */}
               <div className="mb-6">
                 <label className="text-sm font-semibold text-gray-700 block mb-3">Category</label>
@@ -118,7 +118,7 @@ export default function SearchPage() {
                 <label htmlFor="price" className="text-sm font-semibold text-gray-700 block mb-3">
                   Hourly Rate: <span>${priceRange[0]} - ${priceRange[1]}</span>
                 </label>
-                <input 
+                <input
                   type="range"
                   id="price"
                   min="0"
@@ -186,5 +186,21 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function SearchLoading() {
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<SearchLoading />}>
+      <SearchContent />
+    </Suspense>
   );
 }

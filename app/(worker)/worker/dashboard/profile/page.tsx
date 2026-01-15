@@ -2,16 +2,42 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useUser } from "@/contexts/UserContext";
-import { MOCK_WORKERS, MOCK_USERS, SERVICE_CATEGORIES } from "@/constants/mockData";
-import { 
-  User, Mail, Phone, MapPin, Briefcase, Award, GraduationCap, Image as ImageIcon,
-  Edit3, Save, Loader2, PlusCircle, Trash2, Tag, DollarSign, CheckCircle, Upload, X
+import { MOCK_WORKERS, SERVICE_CATEGORIES } from "@/constants/mockData";
+import {
+  Edit3, Save, Loader2, PlusCircle, Trash2, DollarSign, CheckCircle, X, AlertCircle
 } from "lucide-react";
 
+interface WorkerService {
+  id: string;
+  title: string;
+  price: number;
+  type: string;
+}
+
+interface PortfolioItem {
+  id: string;
+  title: string;
+  image: string;
+}
+
+interface WorkerProfile {
+  id: string;
+  userId: string;
+  name: string;
+  bio: string;
+  experience: string;
+  education: string;
+  hourlyRate: number;
+  category: string;
+  services: WorkerService[];
+  portfolio: PortfolioItem[];
+}
+
 export default function WorkerProfilePage() {
-  const { user, loading: userLoading, refetch } = useUser();
-  const [workerProfile, setWorkerProfile] = useState<any>(null); // This would be fetched
+  const { user, loading: userLoading } = useUser();
+  const [workerProfile, setWorkerProfile] = useState<WorkerProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,8 +49,8 @@ export default function WorkerProfilePage() {
     education: '',
     hourlyRate: 0,
     categories: [] as string[],
-    services: [] as any[],
-    portfolio: [] as any[],
+    services: [] as WorkerService[],
+    portfolio: [] as PortfolioItem[],
   });
 
   useEffect(() => {
@@ -38,7 +64,7 @@ export default function WorkerProfilePage() {
           experience: mockWorker.experience || '',
           education: mockWorker.education || '',
           hourlyRate: mockWorker.hourlyRate || 0,
-          categories: [mockWorker.category] || [], // Simplified for now
+          categories: mockWorker.category ? [mockWorker.category] : [],
           services: mockWorker.services || [],
           portfolio: mockWorker.portfolio || [],
         });
@@ -56,8 +82,18 @@ export default function WorkerProfilePage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     // Update local mock data (for simulation)
-    const updatedWorker = { ...workerProfile, ...formData };
-    setWorkerProfile(updatedWorker);
+    if (workerProfile) {
+      const updatedWorker: WorkerProfile = {
+        ...workerProfile,
+        bio: formData.bio,
+        experience: formData.experience,
+        education: formData.education,
+        hourlyRate: formData.hourlyRate,
+        services: formData.services,
+        portfolio: formData.portfolio,
+      };
+      setWorkerProfile(updatedWorker);
+    }
 
     setSuccess("Profile updated successfully!");
     setIsLoading(false);
@@ -71,7 +107,7 @@ export default function WorkerProfilePage() {
     }));
   };
 
-  const handleServiceChange = (index: number, field: string, value: any) => {
+  const handleServiceChange = (index: number, field: string, value: string | number) => {
     setFormData(prev => {
       const newServices = [...prev.services];
       newServices[index] = { ...newServices[index], [field]: value };
@@ -93,7 +129,7 @@ export default function WorkerProfilePage() {
     }));
   };
 
-  const handlePortfolioChange = (index: number, field: string, value: any) => {
+  const handlePortfolioChange = (index: number, field: string, value: string) => {
     setFormData(prev => {
       const newPortfolio = [...prev.portfolio];
       newPortfolio[index] = { ...newPortfolio[index], [field]: value };

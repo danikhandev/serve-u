@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { unbounded } from "@/app/fonts";
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roleParam = searchParams.get("role");
@@ -57,7 +57,7 @@ export default function RegisterPage() {
     try {
       // Mock API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // In a real app, we'd call the API here.
       // For now, redirect to login page.
       router.push(`/login?registered=true`);
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             </h1>
             <p className="text-white/90 text-sm">
               {roleParam ? (
-                isWorker 
+                isWorker
                   ? "Start earning money with your skills today"
                   : "Join Serve-U and get your tasks done"
               ) : (
@@ -305,5 +305,21 @@ export default function RegisterPage() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+function RegisterLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-secondary/5">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<RegisterLoading />}>
+      <RegisterContent />
+    </Suspense>
   );
 }

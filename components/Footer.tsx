@@ -6,15 +6,12 @@ import { unbounded } from "@/app/fonts";
 import {
   Shield,
   Mail,
-  Phone,
   MapPin,
   Twitter,
   Linkedin,
-  Github,
   Facebook,
   Instagram,
   Heart,
-  ArrowRight,
   CheckCircle2,
 } from "lucide-react";
 import { useState } from "react";

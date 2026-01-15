@@ -14,12 +14,15 @@ import {
 
 interface FileAttachmentPreviewProps {
   attachment: {
-    id: string;
-    fileName: string;
-    fileUrl: string;
-    fileType: string;
-    fileSize: number;
+    id?: string;
+    fileName?: string;
+    fileUrl?: string;
+    fileType?: string;
+    fileSize?: number;
     thumbnailUrl?: string | null;
+    url?: string;
+    type?: string;
+    name?: string;
   };
   onPreview?: () => void;
 }
@@ -34,31 +37,35 @@ export default function FileAttachmentPreview({
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
 
+  const fileType = attachment.fileType || attachment.type || '';
+  const fileName = attachment.fileName || attachment.name || '';
+  const fileUrl = attachment.fileUrl || attachment.url || '';
+
   const isImage =
-    attachment.fileType.startsWith("image/") ||
+    fileType.startsWith("image/") ||
     ["jpg", "jpeg", "png", "gif", "webp"].some((ext) =>
-      attachment.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   const isVideo =
-    attachment.fileType.startsWith("video/") ||
+    fileType.startsWith("video/") ||
     ["mp4", "webm", "mov"].some((ext) =>
-      attachment.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   const isAudio =
-    attachment.fileType.startsWith("audio/") ||
+    fileType.startsWith("audio/") ||
     ["mp3", "wav", "ogg", "webm", "m4a"].some((ext) =>
-      attachment.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   const isDocument =
-    attachment.fileType.includes("pdf") ||
-    attachment.fileType.includes("document") ||
-    attachment.fileType.includes("word") ||
-    attachment.fileType.includes("text") ||
+    fileType.includes("pdf") ||
+    fileType.includes("document") ||
+    fileType.includes("word") ||
+    fileType.includes("text") ||
     ["pdf", "doc", "docx", "txt"].some((ext) =>
-      attachment.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   const formatFileSize = (bytes: number): string => {
@@ -75,12 +82,12 @@ export default function FileAttachmentPreview({
 
   const handleDownload = async () => {
     try {
-      const response = await fetch(attachment.fileUrl);
+      const response = await fetch(fileUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = attachment.fileName;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -98,8 +105,8 @@ export default function FileAttachmentPreview({
           onClick={onPreview}
         >
           <Image
-            src={attachment.thumbnailUrl || attachment.fileUrl}
-            alt={attachment.fileName}
+            src={attachment.thumbnailUrl || fileUrl}
+            alt={fileName}
             width={300}
             height={200}
             className="object-cover max-w-sm rounded-lg"
@@ -128,7 +135,7 @@ export default function FileAttachmentPreview({
           onClick={onPreview}
         >
           <video
-            src={attachment.fileUrl}
+            src={fileUrl}
             className="w-full rounded-lg"
             controls={false}
           />
@@ -189,7 +196,7 @@ export default function FileAttachmentPreview({
                   ? formatDuration(audioCurrentTime) +
                     " / " +
                     formatDuration(audioDuration)
-                  : formatFileSize(attachment.fileSize)}
+                  : formatFileSize(attachment.fileSize || 0)}
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -230,7 +237,7 @@ export default function FileAttachmentPreview({
 
         <audio
           id={`audio-${attachment.id}`}
-          src={attachment.fileUrl}
+          src={fileUrl}
           onTimeUpdate={(e) => {
             const audio = e.currentTarget;
             const progress = (audio.currentTime / audio.duration) * 100;
@@ -260,10 +267,10 @@ export default function FileAttachmentPreview({
 
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-text truncate">
-              {attachment.fileName}
+              {fileName}
             </p>
             <p className="text-xs text-text/60">
-              {formatFileSize(attachment.fileSize)}
+              {formatFileSize(attachment.fileSize || 0)}
             </p>
           </div>
 
@@ -289,10 +296,10 @@ export default function FileAttachmentPreview({
 
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-text truncate">
-            {attachment.fileName}
+            {fileName}
           </p>
           <p className="text-xs text-text/60">
-            {formatFileSize(attachment.fileSize)}
+            {formatFileSize(attachment.fileSize || 0)}
           </p>
         </div>
 

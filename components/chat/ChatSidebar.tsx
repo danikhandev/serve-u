@@ -1,22 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { MOCK_CONVERSATIONS, MOCK_USERS, MOCK_WORKERS } from "@/constants/mockData";
-import { User } from "@/contexts/UserContext";
+
+interface ChatUser {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  avatar?: string;
+}
+
+interface Conversation {
+  id: string;
+  workerId: string;
+  consumerId: string;
+  lastMessageAt: string | null;
+  lastMessageText: string;
+  consumerUnreadCount: number;
+  workerUnreadCount: number;
+  otherUser?: ChatUser;
+}
 
 interface ChatSidebarProps {
-  currentUserId: string;
   currentUserRole: "consumer" | "worker";
-  onClose?: () => void;
 }
 
 export default function ChatSidebar({
-  currentUserId,
   currentUserRole,
-  onClose,
 }: ChatSidebarProps) {
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,14 +49,13 @@ export default function ChatSidebar({
 
   const filteredConversations = conversations.filter((conv) => {
     const fullName = `${conv.otherUser?.firstName || ""} ${conv.otherUser?.lastName || ""}`.toLowerCase();
-    const email = conv.otherUser?.email?.toLowerCase() || "";
     const query = searchQuery.toLowerCase();
-    return fullName.includes(query) || email.includes(query);
+    return fullName.includes(query);
   });
 
-  const getOtherUser = (conv: any) => conv.otherUser;
+  const getOtherUser = (conv: Conversation) => conv.otherUser;
 
-  const getUnreadCount = (conv: any): number => {
+  const getUnreadCount = (conv: Conversation): number => {
     return currentUserRole === "consumer"
       ? conv.consumerUnreadCount
       : conv.workerUnreadCount;

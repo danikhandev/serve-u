@@ -1,33 +1,40 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { Send, Paperclip, Mic, CheckCheck, Menu } from "lucide-react";
-import Link from "next/link";
 import FileAttachmentPreview from "./FileAttachmentPreview";
 import MediaViewerModal from "./MediaViewerModal";
 import VoiceRecorder from "./VoiceRecorder";
 import { MOCK_MESSAGES } from "@/constants/mockData";
 
 // Simplified Message type for the mock data structure
+interface Attachment {
+  id?: string;
+  url?: string;
+  fileUrl?: string;
+  type?: string;
+  fileType?: string;
+  name?: string;
+  fileName?: string;
+  fileSize?: number;
+}
+
 interface Message {
   id: string;
   conversationId: string;
   senderId: string;
-  senderType: "USER" | "WORKER";
-  messageType: "TEXT" | "IMAGE" | "VIDEO" | "DOCUMENT" | "AUDIO";
+  senderType: string;
+  messageType: string;
   content: string | null;
   createdAt: string;
   readAt: string | null;
-  attachments?: { url: string; type: string; name?: string }[];
+  attachments?: Attachment[];
 }
 
 interface ChatWindowProps {
   conversationId: string;
-  userId: string;
   userName: string;
   userImage?: string;
-  userRole: "worker" | "consumer";
   isOnline: boolean;
   currentUserId: string;
   currentUserRole: "worker" | "consumer";
@@ -36,10 +43,8 @@ interface ChatWindowProps {
 
 export default function ChatWindow({
   conversationId,
-  userId,
   userName,
   userImage,
-  userRole,
   isOnline,
   currentUserId,
   currentUserRole,
@@ -48,7 +53,7 @@ export default function ChatWindow({
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [showVoiceRecorder, setShowVoiceRecorder] = useState(false);
-  const [selectedMedia, setSelectedMedia] = useState<{ url: string; type: string } | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<Attachment | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -125,8 +130,7 @@ export default function ChatWindow({
   // Helper Functions
   const formatTime = (date: string) => new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   const formatDate = (date: string) => new Date(date).toLocaleDateString([], { month: 'long', day: 'numeric' });
-  const allMediaAttachments = messages.flatMap(msg => msg.attachments || []).filter(att => att.fileType.startsWith('image/') || att.fileType.startsWith('video/'));
-  const initials = userName.split(" ").map((n) => n[0]).join("").toUpperCase();
+  const allMediaAttachments = messages.flatMap(msg => msg.attachments || []).filter(att => (att.fileType || att.type || '').startsWith('image/') || (att.fileType || att.type || '').startsWith('video/'));
 
   return (
     <>

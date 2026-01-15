@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, DollarSign, Paperclip, CheckCircle2, AlertCircle } from "lucide-react";
-import { format } from "date-fns"; // Assuming date-fns is not installed, I'll use native Date
-// If date-fns is not available, I will use native JS Date formatting
+import { X, Calendar, DollarSign, Paperclip, CheckCircle2 } from "lucide-react";
 
 interface Service {
   id: string;
   title: string;
   price: number;
-  type: "FIXED" | "HOURLY" | "QUOTATION";
+  type: string;
 }
 
 interface BookingModalProps {
@@ -18,10 +16,9 @@ interface BookingModalProps {
   onClose: () => void;
   workerName: string;
   services: Service[];
-  hourlyRate: number;
 }
 
-export default function BookingModal({ isOpen, onClose, workerName, services, hourlyRate }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, workerName, services }: BookingModalProps) {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState<string | "custom">("");
   const [description, setDescription] = useState("");

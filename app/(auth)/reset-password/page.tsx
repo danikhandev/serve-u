@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Loader2, ShieldCheck, Mail, ArrowLeft } from "lucide-react";
+import { Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Loader2, ShieldCheck, Mail } from "lucide-react";
 import { unbounded } from "@/app/fonts";
 
 function ResetPasswordContent() {

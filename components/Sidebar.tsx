@@ -81,18 +81,14 @@ export default function Sidebar({ type }: SidebarProps) {
   ];
 
   let menuItems;
-  let basePath;
 
   if (type === "admin") {
     menuItems = adminMenuItems;
-    basePath = "/admin/dashboard";
   } else if (activePerspective === "worker" && user?.isUserSignUpForWorker) {
     menuItems = workerMenuItems;
-    basePath = "/worker/dashboard";
   } else {
     // Default to consumer view
     menuItems = consumerMenuItems;
-    basePath = "/dashboard";
   }
 
 

@@ -145,7 +145,7 @@ async function uploadAzure(
     const filename = `${uuidv4()}${ext}`;
     const blobName = `${folder}/${filename}`;
 
-    const blobServiceClient = getAzureBlobClient();
+    const blobServiceClient = await getAzureBlobClient() as { getContainerClient: (name: string) => { getBlockBlobClient: (name: string) => { upload: (buffer: Buffer, length: number, options: unknown) => Promise<void>; url: string } } };
     const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
 
     if (!containerName) {
@@ -224,7 +224,7 @@ async function deleteLocal(fileUrl: string): Promise<void> {
  */
 async function deleteAzure(fileUrl: string): Promise<void> {
   try {
-    const blobServiceClient = getAzureBlobClient();
+    const blobServiceClient = await getAzureBlobClient() as { getContainerClient: (name: string) => { getBlockBlobClient: (name: string) => { delete: () => Promise<void> } } };
     const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
 
     if (!containerName) {
