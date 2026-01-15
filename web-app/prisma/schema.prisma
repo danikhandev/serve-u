@@ -1,0 +1,288 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Using PostgreSQL as default, change if needed
+  url      = env("DATABASE_URL")
+}
+
+// ==============================
+// Enums
+// ==============================
+
+enum UserRole {
+  USER          // Standard role (can request services)
+  WORKER        // Can provide services (if isUserSignUpForWorker is true)
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+enum PaymentMethod {
+  COD           // Cash on Delivery
+  IN_APP        // Online Payment
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+// ==============================
+// Auth & User Management
+// ==============================
+
+model SuperAdmin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  phone     String?  @unique
+  
+  // Personal Details
+  firstName String
+  lastName  String
+  avatar    String?
+  dob       DateTime?
+  gender    Gender?
+  address   String?
+  
+  // Auth & Verification
+  isEmailVerified Boolean @default(false)
+  isPhoneVerified Boolean @default(false)
+  otpCode         String? // For email/phone verification
+  otpUzupiry      DateTime?
+  lastLogin       DateTime?
+  
+  // Identity Verification (ID Card module)
+  idCardUrl       String?
+  idVerificationStatus VerificationStatus @default(PENDING)
+  
+  // Role Switching Logic
+  // Users always have "USER" capabilities (requesting services).
+  // If this is true, they also have "WORKER" capabilities.
+  isUserSignUpForWorker Boolean @default(false)
+  
+  // Relations
+  workerProfile   WorkerProfile?  // Exists only if isUserSignUpForWorker is true
+  
+  sentRequests    ServiceRequest[] @relation("Requester")
+  receivedRequests ServiceRequest[] @relation("Worker") // If acting as worker
+  
+  reviewsWritten  Review[] @relation("ReviewAuthor")
+  reviewsReceived Review[] @relation("ReviewTarget")
+
+  transactions    Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==============================
+// Worker Specifics
+// ==============================
+
+model WorkerProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Professional Details
+  bio         String?
+  experience  String?  // Years of experience or description
+  education   String?
+  
+  // Onboarding Checklist
+  isProfileCompleted Boolean @default(false)
+  isEducationAdded   Boolean @default(false)
+  isExperienceAdded  Boolean @default(false)
+  isPortfolioAdded   Boolean @default(false)
+  
+  // Service Settings
+  primaryServiceId   String?  // Primary category ID
+  
+  // Relations
+  categories      Category[] // Worker can select 2-3 categories
+  portfolioItems  PortfolioItem[]
+  services        Service[] // Specific services offered by this worker
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PortfolioItem {
+  id              String        @id @default(uuid())
+  workerProfileId String
+  workerProfile   WorkerProfile @relation(fields: [workerProfileId], references: [id])
+  
+  title       String
+  description String?
+  imageUrl    String?
+  projectUrl  String?
+  
+  createdAt   DateTime @default(now())
+}
+
+// ==============================
+// Service Management
+// ==============================
+
+// Categories created by SuperAdmin (e.g., Plumber, Electrician)
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  icon        String?
+  description String?
+  
+  // Relations
+  workers     WorkerProfile[] // Many-to-Many: Workers can belong to multiple categories
+  services    Service[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Specific service listing created by a Worker
+model Service {
+  id              String        @id @default(uuid())
+  workerProfileId String
+  workerProfile   WorkerProfile @relation(fields: [workerProfileId], references: [id])
+  
+  categoryId      String
+  category        Category      @relation(fields: [categoryId], references: [id])
+  
+  title           String
+  description     String?
+  basePrice       Decimal?      // Optional, workers might set prices per request
+  priceType       String?       // "FIXED", "HOURLY", "QUOTATION"
+  
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ==============================
+// Requests & Transactions
+// ==============================
+
+model ServiceRequest {
+  id          String   @id @default(uuid())
+  
+  // Participants
+  requesterId String
+  requester   User     @relation("Requester", fields: [requesterId], references: [id])
+  
+  workerId    String
+  worker      User     @relation("Worker", fields: [workerId], references: [id])
+  
+  // Request Details
+  serviceTitle String  // Snapshot of service title or custom request
+  description  String
+  attachments  String[] // URLs to images/docs
+  
+  status      RequestStatus @default(PENDING)
+  
+  // Timing
+  scheduledDate DateTime?
+  
+  // Financials
+  quotedPrice   Decimal? // Set by worker or agreed upon
+  paymentMethod PaymentMethod?
+  
+  transaction   Transaction?
+  
+  review        Review?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Transaction {
+  id              String   @id @default(uuid())
+  requestId       String   @unique
+  request         ServiceRequest @relation(fields: [requestId], references: [id])
+  
+  userId          String   // Payer
+  user            User     @relation(fields: [userId], references: [id])
+  
+  amount          Decimal
+  commission      Decimal  // Calculated based on AppConfig
+  workerEarnings  Decimal
+  
+  status          PaymentStatus @default(PENDING)
+  paymentMethod   PaymentMethod
+  
+  stripePaymentId String? // If In-App
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Review {
+  id              String   @id @default(uuid())
+  requestId       String   @unique
+  request         ServiceRequest @relation(fields: [requestId], references: [id])
+  
+  authorId        String
+  author          User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  
+  targetId        String
+  target          User     @relation("ReviewTarget", fields: [targetId], references: [id])
+  
+  rating          Int      // 1-5
+  comment         String?
+  
+  createdAt       DateTime @default(now())
+}
+
+// ==============================
+// System Configuration
+// ==============================
+
+model AppConfig {
+  id             String   @id @default(uuid())
+  
+  // Commission Settings
+  defaultCommissionRate Decimal @default(10.0) // Percentage (e.g., 10%)
+  
+  // Split settings
+  workerCommissionRate  Decimal @default(10.0) // Deducted from worker
+  userFeeRate           Decimal @default(0.0)  // Added to user bill
+  
+  updatedAt      DateTime @updatedAt
+}
