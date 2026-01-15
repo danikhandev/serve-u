@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, ChevronRight, Shield, LogIn, User2, MessageSquare, Bell, LogOut, LayoutDashboard, Hammer, Wrench, Zap, Droplets, Paintbrush, Truck, Briefcase, Search } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Shield, LogIn, User2, MessageSquare, Bell, LogOut, LayoutDashboard, Hammer, Zap, Droplets, Paintbrush, Truck, Briefcase, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { unbounded } from "@/app/fonts";
@@ -69,7 +69,7 @@ export default function Header() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  const { user, loading, logout, activePerspective, switchPerspective } = useUser();
+  const { user, logout, activePerspective, switchPerspective } = useUser();
   const router = useRouter();
 
   useEffect(() => {

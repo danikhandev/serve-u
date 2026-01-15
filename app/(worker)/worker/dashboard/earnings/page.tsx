@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { DollarSign, Briefcase, Calendar, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { Wallet } from "lucide-react";
 
 const mockEarnings = {
   totalEarned: 12500,

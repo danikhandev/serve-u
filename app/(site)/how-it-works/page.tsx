@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle, Search, Calendar, MessageSquare, Star, UserPlus, Briefcase, DollarSign, Award } from 'lucide-react';
+import { ArrowRight, CheckCircle, Search, Calendar, MessageSquare, Star, UserPlus, Briefcase, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 
 export default function HowItWorksPage() {

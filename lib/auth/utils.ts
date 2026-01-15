@@ -4,8 +4,6 @@
 
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "your-secret-key";
 
@@ -130,165 +128,85 @@ export function generateSlug(name: string): string {
  * @param request - NextRequest object
  * @returns Object with either user data or error response
  */
-export async function userGuard(request: NextRequest): Promise<{
-  user?: Record<string, unknown>;
-  error?: NextResponse;
-}> {
-  try {
-    // Extract token from cookies
-    const token = request.cookies.get("auth-user-token")?.value;
+// export async function userGuard(request: NextRequest): Promise<{
+//   user?: Record<string, unknown>;
+//   error?: NextResponse;
+// }> {
+//   try {
+//     // Extract token from cookies
+//     const token = request.cookies.get("auth-user-token")?.value;
 
-    if (!token) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - No token provided" },
-          { status: 401 }
-        ),
-      };
-    }
+//     if (!token) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - No token provided" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    // Verify token (also checks expiration)
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid or expired token" },
-          { status: 401 }
-        ),
-      };
-    }
+//     // Verify token (also checks expiration)
+//     const decoded = await verifyToken(token);
+//     if (!decoded) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - Invalid or expired token" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    const userId = decoded.userId;
-    if (!userId) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid token payload" },
-          { status: 401 }
-        ),
-      };
-    }
+//     const userId = decoded.userId;
+//     if (!userId) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - Invalid token payload" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    // Fetch user from database
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+//     // Fetch user from database
+//     const user = await prisma.user.findUnique({
+//       where: { id: userId },
       
-    });
+//     });
 
-    if (!user) {
-      return {
-        error: NextResponse.json(
-          { error: "User not found" },
-          { status: 404 }
-        ),
-      };
-    }
+//     if (!user) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "User not found" },
+//           { status: 404 }
+//         ),
+//       };
+//     }
 
-    // Check if user is active
-    if (!user.isActive) {
-      return {
-        error: NextResponse.json(
-          { error: "Account has been deactivated" },
-          { status: 403 }
-        ),
-      };
-    }
+//     // Check if user is active
+//     if (!user.isActive) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Account has been deactivated" },
+//           { status: 403 }
+//         ),
+//       };
+//     }
 
-    // Return user without password
-    const { password, verificationOtp, verificationOtpExpiry, passwordResetOtp, passwordResetOtpExpiry, ...userWithoutPassword } = user;
+//     // Return user without password
+//     const { password: _password, verificationOtp: _verificationOtp, verificationOtpExpiry: _verificationOtpExpiry, passwordResetOtp: _passwordResetOtp, passwordResetOtpExpiry: _passwordResetOtpExpiry, ...userWithoutPassword } = user;
 
-    return {
-      user: userWithoutPassword,
-    };
-  } catch (error) {
-    console.error("User guard error:", error);
-    return {
-      error: NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      ),
-    };
-  }
-}
-
-export async function doctorGuard(request: NextRequest): Promise<{
-  doctor?: Record<string, unknown>;
-  error?: NextResponse;
-}> {
-  try {
-    // Extract token from cookies
-    const token = request.cookies.get("auth-doctor-token")?.value;
-
-    if (!token) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - No token provided" },
-          { status: 401 }
-        ),
-      };
-    }
-
-    // Verify token (also checks expiration)
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid or expired token" },
-          { status: 401 }
-        ),
-      };
-    }
-
-    const userId = decoded.userId;
-    if (!userId) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid token payload" },
-          { status: 401 }
-        ),
-      };
-    }
-
-    // Fetch user from database
-    const user = await prisma.doctor.findUnique({
-      where: { id: userId },
-      
-    });
-
-    if (!user) {
-      return {
-        error: NextResponse.json(
-          { error: "User not found" },
-          { status: 404 }
-        ),
-      };
-    }
-
-    // Check if user is active
-    if (!user.isActive) {
-      return {
-        error: NextResponse.json(
-          { error: "Account has been deactivated" },
-          { status: 403 }
-        ),
-      };
-    }
-
-    // Return user without password
-    const { password, verificationOtp, verificationOtpExpiry, passwordResetOtp, passwordResetOtpExpiry, ...userWithoutPassword } = user;
-
-    return {
-      doctor: userWithoutPassword,
-    };
-  } catch (error) {
-    console.error("User guard error:", error);
-    return {
-      error: NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      ),
-    };
-  }
-}
+//     return {
+//       user: userWithoutPassword,
+//     };
+//   } catch (error) {
+//     console.error("User guard error:", error);
+//     return {
+//       error: NextResponse.json(
+//         { error: "Internal server error" },
+//         { status: 500 }
+//       ),
+//     };
+//   }
+// }
 
 /**
  * Admin Guard - Authenticate and get super admin from cookie token
@@ -297,71 +215,71 @@ export async function doctorGuard(request: NextRequest): Promise<{
  * @param request - NextRequest object
  * @returns Object with either admin data or error response
  */
-export async function adminGuard(request: NextRequest): Promise<{
-  admin?: Record<string, unknown>;
-  error?: NextResponse;
-}> {
-  try {
-    // Extract token from cookies
-    const token = request.cookies.get("admin-auth-token")?.value;
+// export async function adminGuard(request: NextRequest): Promise<{
+//   admin?: Record<string, unknown>;
+//   error?: NextResponse;
+// }> {
+//   try {
+//     // Extract token from cookies
+//     const token = request.cookies.get("admin-auth-token")?.value;
 
-    if (!token) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - No token provided" },
-          { status: 401 }
-        ),
-      };
-    }
+//     if (!token) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - No token provided" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    // Verify token (also checks expiration)
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid or expired token" },
-          { status: 401 }
-        ),
-      };
-    }
+//     // Verify token (also checks expiration)
+//     const decoded = await verifyToken(token);
+//     if (!decoded) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - Invalid or expired token" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    const adminId = decoded.adminId;
-    if (!adminId) {
-      return {
-        error: NextResponse.json(
-          { error: "Unauthorized - Invalid token payload" },
-          { status: 401 }
-        ),
-      };
-    }
+//     const adminId = decoded.adminId;
+//     if (!adminId) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Unauthorized - Invalid token payload" },
+//           { status: 401 }
+//         ),
+//       };
+//     }
 
-    // Fetch admin from database
-    const admin = await prisma.superAdmin.findUnique({
-      where: { id: adminId },
-    });
+//     // Fetch admin from database
+//     const admin = await prisma.superAdmin.findUnique({
+//       where: { id: adminId },
+//     });
 
-    if (!admin) {
-      return {
-        error: NextResponse.json(
-          { error: "Admin not found" },
-          { status: 404 }
-        ),
-      };
-    }
+//     if (!admin) {
+//       return {
+//         error: NextResponse.json(
+//           { error: "Admin not found" },
+//           { status: 404 }
+//         ),
+//       };
+//     }
 
-    // Return admin without password
-    const { password, ...adminWithoutPassword } = admin;
+//     // Return admin without password
+//     const { password: _password, ...adminWithoutPassword } = admin;
 
-    return {
-      admin: adminWithoutPassword,
-    };
-  } catch (error) {
-    console.error("Admin guard error:", error);
-    return {
-      error: NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      ),
-    };
-  }
-}
+//     return {
+//       admin: adminWithoutPassword,
+//     };
+//   } catch (error) {
+//     console.error("Admin guard error:", error);
+//     return {
+//       error: NextResponse.json(
+//         { error: "Internal server error" },
+//         { status: 500 }
+//       ),
+//     };
+//   }
+// }

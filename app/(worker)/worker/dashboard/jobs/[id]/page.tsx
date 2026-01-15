@@ -1,19 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  ChevronLeft, 
-  Calendar, 
-  Clock, 
-  DollarSign, 
-  Briefcase, 
-  MessageSquare,
-  CheckCircle,
-  XCircle,
-  Paperclip,
-  Award
+import {
+  ChevronLeft,
+  Paperclip
 } from "lucide-react";
 import Link from "next/link";
 
@@ -63,10 +55,36 @@ const statusConfig = {
   CANCELLED: { label: "Cancelled", color: "bg-red-100 text-red-700 border-red-200" },
 };
 
+interface Attachment {
+  id: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+}
+
+interface TimelineItem {
+  status: string;
+  date: string;
+  note: string;
+}
+
+interface Job {
+  id: string;
+  service: string;
+  consumer: string;
+  consumerId: string;
+  status: string;
+  date: string;
+  quotedPrice: number;
+  description: string;
+  attachments: Attachment[];
+  location: string;
+  timeline: TimelineItem[];
+}
+
 export default function JobDetailPage() {
   const params = useParams();
-  const router = useRouter();
-  const [job, setJob] = useState<any>(null);
+  const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentStatus, setCurrentStatus] = useState<string>("");
 
@@ -139,7 +157,7 @@ export default function JobDetailPage() {
             <div className="mb-8">
               <h3 className="text-lg font-bold text-gray-800 mb-4">Attachments</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {job.attachments.map((att: any) => (
+                {job.attachments.map((att: Attachment) => (
                   <a key={att.id} href={att.fileUrl} target="_blank" rel="noopener noreferrer" className="block relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
                     <img src={att.fileUrl} alt={att.fileName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -153,7 +171,7 @@ export default function JobDetailPage() {
 
           <h3 className="text-lg font-bold text-gray-800 mb-4">Activity Timeline</h3>
           <div className="space-y-6">
-            {job.timeline.map((item: any, index: number) => (
+            {job.timeline.map((item: TimelineItem, index: number) => (
               <div key={index} className="flex gap-4">
                 <div className="relative">
                   <div className={`w-3 h-3 rounded-full mt-1 ${statusConfig[item.status as keyof typeof statusConfig].color.replace('text-', 'bg-')}`}></div>

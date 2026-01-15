@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, User2, MessageSquare, Repeat, Check } from "lucide-react";
+import { Bell, User2, MessageSquare, Repeat } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

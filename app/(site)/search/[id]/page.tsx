@@ -3,7 +3,7 @@
 import BookingModal from "@/components/booking/BookingModal";
 import { MOCK_WORKERS } from "@/constants/mockData";
 import { useUser } from "@/contexts/UserContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   MapPin, 
   Star, 
@@ -15,12 +15,11 @@ import {
   ChevronLeft
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function WorkerDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const { user } = useUser();
   const [worker, setWorker] = useState<typeof MOCK_WORKERS[number] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -218,12 +217,11 @@ export default function WorkerDetailPage() {
         </div>
       </div>
 
-      <BookingModal 
+      <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         workerName={worker.name}
         services={worker.services}
-        hourlyRate={worker.hourlyRate}
       />
     </div>
   );

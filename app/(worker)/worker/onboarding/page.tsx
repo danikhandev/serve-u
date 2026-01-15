@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { 
+import {
   User, Briefcase, Tag, Image as ImageIcon, CheckCircle, ArrowRight, ArrowLeft,
-  Mail, Phone, MapPin, Award, GraduationCap, Upload, DollarSign, PlusCircle, Trash2, X, ClipboardCheck
+  Upload, PlusCircle, Trash2, X, ClipboardCheck, AlertCircle, Loader2
 } from "lucide-react";
-import Link from "next/link";
 import { useUser } from "@/contexts/UserContext";
 import { SERVICE_CATEGORIES } from "@/constants/mockData"; // Re-using static categories
 
@@ -30,8 +29,8 @@ export default function WorkerOnboardingPage() {
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
+    phone: '',
+    address: '',
     bio: '',
     experience: '',
     education: '',
@@ -86,7 +85,7 @@ export default function WorkerOnboardingPage() {
     }));
   };
 
-  const handleServiceChange = (index: number, field: string, value: any) => {
+  const handleServiceChange = (index: number, field: string, value: string | number) => {
     setFormData(prev => {
       const newServices = [...prev.servicesOffered];
       newServices[index] = { ...newServices[index], [field]: value };
@@ -108,7 +107,7 @@ export default function WorkerOnboardingPage() {
     }));
   };
 
-  const handlePortfolioChange = (index: number, field: string, value: any) => {
+  const handlePortfolioChange = (index: number, field: string, value: string) => {
     setFormData(prev => {
       const newPortfolio = [...prev.portfolioItems];
       newPortfolio[index] = { ...newPortfolio[index], [field]: value };
@@ -324,7 +323,7 @@ export default function WorkerOnboardingPage() {
           >
             <div>
               <h3 className="font-medium text-gray-900 mb-2">ID Verification</h3>
-              <p className="text-gray-600 mb-4">Upload a clear photo of your government-issued ID (e.g., Driver's License, Passport).</p>
+              <p className="text-gray-600 mb-4">Upload a clear photo of your government-issued ID (e.g., Driver&apos;s License, Passport).</p>
               <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
                 <input type="file" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
                 {formData.idCardPreview ? (

@@ -7,7 +7,7 @@ import UserProfileTab from "@/components/profile/UserProfileTab";
 import { AlertCircle, CheckCircle, Loader2, X } from "lucide-react";
 
 export default function ProfilePage() {
-  const { user, loading: userLoading, refetch } = useUser();
+  const { user, loading: userLoading } = useUser();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -20,13 +20,6 @@ export default function ProfilePage() {
   const handleError = (message: string) => {
     setError(message);
     setSuccess("");
-  };
-
-  // Wrapper for refetch that matches the expected signature () => Promise<void>
-  const handleRefetch = async () => {
-    if (refetch) {
-      await refetch();
-    }
   };
 
   if (userLoading) {

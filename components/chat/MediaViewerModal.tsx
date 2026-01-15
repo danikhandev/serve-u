@@ -5,11 +5,14 @@ import Image from "next/image";
 import { X, Download, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 
 interface MediaAttachment {
-  id: string;
-  fileName: string;
-  fileUrl: string;
-  fileType: string;
+  id?: string;
+  fileName?: string;
+  fileUrl?: string;
+  fileType?: string;
   thumbnailUrl?: string | null;
+  url?: string;
+  type?: string;
+  name?: string;
 }
 
 interface MediaViewerModalProps {
@@ -29,16 +32,20 @@ export default function MediaViewerModal({
   );
   const [zoom, setZoom] = useState(1);
 
+  const fileType = currentMedia.fileType || currentMedia.type || '';
+  const fileName = currentMedia.fileName || currentMedia.name || '';
+  const fileUrl = currentMedia.fileUrl || currentMedia.url || '';
+
   const isImage =
-    currentMedia.fileType.startsWith("image/") ||
+    fileType.startsWith("image/") ||
     ["jpg", "jpeg", "png", "gif", "webp"].some((ext) =>
-      currentMedia.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   const isVideo =
-    currentMedia.fileType.startsWith("video/") ||
+    fileType.startsWith("video/") ||
     ["mp4", "webm", "mov"].some((ext) =>
-      currentMedia.fileName.toLowerCase().endsWith(ext)
+      fileName.toLowerCase().endsWith(ext)
     );
 
   useEffect(() => {
@@ -50,6 +57,7 @@ export default function MediaViewerModal({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   const handlePrevious = () => {
@@ -72,12 +80,12 @@ export default function MediaViewerModal({
 
   const handleDownload = async () => {
     try {
-      const response = await fetch(currentMedia.fileUrl);
+      const response = await fetch(fileUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = currentMedia.fileName;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -111,7 +119,7 @@ export default function MediaViewerModal({
           </button>
           <div>
             <h3 className="text-sm font-medium text-white">
-              {currentMedia.fileName}
+              {fileName}
             </h3>
             {allMedia.length > 1 && (
               <p className="text-xs text-white/60">
@@ -205,8 +213,8 @@ export default function MediaViewerModal({
               }}
             >
               <Image
-                src={currentMedia.fileUrl}
-                alt={currentMedia.fileName}
+                src={fileUrl}
+                alt={fileName}
                 width={1920}
                 height={1080}
                 className="max-w-full h-auto object-contain"
@@ -215,7 +223,7 @@ export default function MediaViewerModal({
             </div>
           ) : isVideo ? (
             <video
-              src={currentMedia.fileUrl}
+              src={fileUrl}
               controls
               autoPlay
               className="max-w-full max-h-[80vh] rounded-lg"
@@ -242,10 +250,12 @@ export default function MediaViewerModal({
           <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2">
             {allMedia.map((m, idx) => {
               const isCurrent = idx === currentIndex;
+              const mFileType = m.fileType || m.type || '';
+              const mFileName = m.fileName || m.name || '';
               const isThumbImage =
-                m.fileType.startsWith("image/") ||
+                mFileType.startsWith("image/") ||
                 ["jpg", "jpeg", "png", "gif", "webp"].some((ext) =>
-                  m.fileName.toLowerCase().endsWith(ext)
+                  mFileName.toLowerCase().endsWith(ext)
                 );
 
               return (
@@ -265,8 +275,8 @@ export default function MediaViewerModal({
                 >
                   {isThumbImage ? (
                     <Image
-                      src={m.thumbnailUrl || m.fileUrl}
-                      alt={m.fileName}
+                      src={m.thumbnailUrl || m.fileUrl || m.url || ''}
+                      alt={mFileName}
                       width={64}
                       height={64}
                       className="w-full h-full object-cover"

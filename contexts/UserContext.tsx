@@ -31,6 +31,7 @@ interface UserContextType {
   logout: () => void;
   refetch: () => Promise<void>;
   switchPerspective: (perspective: UserPerspective) => void; // New: Function to switch view
+  clearAllUsers: () => void; // Clear all user auth data
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -146,9 +147,18 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
      // Admin perspective is handled separately by AdminContext
   }, [user]);
 
+  const clearAllUsers = useCallback(() => {
+    setUser(null);
+    setActivePerspective("consumer");
+    localStorage.removeItem(USER_STORAGE_KEY);
+    localStorage.removeItem(PERSPECTIVE_STORAGE_KEY);
+    document.cookie = "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "auth-user-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }, []);
+
   return (
     <UserContext.Provider
-      value={{ user, loading, error, activePerspective, login, logout, refetch, switchPerspective }}
+      value={{ user, loading, error, activePerspective, login, logout, refetch, switchPerspective, clearAllUsers }}
     >
       {children}
     </UserContext.Provider>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Mic, Square, X, Send, Loader2 } from "lucide-react";
+import { Mic, X, Send, Loader2 } from "lucide-react";
 
 interface VoiceRecorderProps {
   onRecordingComplete: (audioBlob: Blob, duration: number) => void;
@@ -15,7 +15,6 @@ export default function VoiceRecorder({
   maxDurationSeconds = 600, // 10 minutes default
 }: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,6 +33,7 @@ export default function VoiceRecorder({
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startRecording = async () => {

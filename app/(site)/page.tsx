@@ -16,7 +16,6 @@ import {
   Truck,
   Wrench,
   Star,
-  Users,
   Smartphone,
   Wallet,
   Briefcase,
@@ -63,7 +62,7 @@ function HeroSection({ opacity, scale, y }: { opacity: MotionValue<number>; scal
       setActiveService((prev) => (prev + 1) % services.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [services.length]);
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">

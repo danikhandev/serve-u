@@ -1,13 +1,11 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  MessageSquare, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle,
-  ArrowRight
+import {
+  MessageSquare,
+  Clock,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
 

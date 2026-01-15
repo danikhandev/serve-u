@@ -6,11 +6,11 @@ import ChatEmptyState from "@/components/chat/ChatEmptyState";
 import { Loader2 } from "lucide-react";
 
 export default function ChatPage() {
-  const { user, loading } = useUser();
+  const { user, loading, activePerspective } = useUser();
 
   // Determine current role based on user's active perspective
-  const currentUserRole = user?.isUserSignUpForWorker 
-    ? (user.activePerspective || 'consumer') // Default to consumer if perspective is not set
+  const currentUserRole = user?.isUserSignUpForWorker
+    ? (activePerspective || 'consumer')
     : 'consumer';
 
   if (loading) {
@@ -42,8 +42,7 @@ export default function ChatPage() {
         {/* Sidebar - Full width on mobile, dynamic width on desktop */}
         <div className="w-full lg:w-auto flex-shrink-0 h-full">
           <ChatSidebar
-            currentUserId={user.id}
-            currentUserRole={currentUserRole}
+            currentUserRole={currentUserRole as "consumer" | "worker"}
           />
         </div>
 

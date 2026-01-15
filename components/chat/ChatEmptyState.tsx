@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, Mic, Paperclip, Video, Shield } from "lucide-react";
+import { MessageCircle, Mic, Paperclip, Shield } from "lucide-react";
 
 export default function ChatEmptyState() {
   return (

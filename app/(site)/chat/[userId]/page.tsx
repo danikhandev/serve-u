@@ -9,37 +9,54 @@ import { useParams } from "next/navigation";
 import { MOCK_CONVERSATIONS, MOCK_USERS, MOCK_WORKERS } from "@/constants/mockData";
 
 export default function ChatPage() {
-  const { user, loading } = useUser();
+  const { user, loading, activePerspective } = useUser();
   const params = useParams();
   const otherUserId = params.userId as string;
 
   const [conversation, setConversation] = useState<typeof MOCK_CONVERSATIONS[number] | null>(null);
-  const [otherUser, setOtherUser] = useState<typeof MOCK_USERS[number] | typeof MOCK_WORKERS[number] | null>(null);
+  const [otherUser, setOtherUser] = useState<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    profileImage: string;
+    email: string;
+  } | null>(null);
 
-  const currentUserRole = user?.isUserSignUpForWorker 
-    ? (user.activePerspective || 'consumer')
+  const currentUserRole = user?.isUserSignUpForWorker
+    ? (activePerspective || 'consumer')
     : 'consumer';
 
   useEffect(() => {
     if (user && otherUserId) {
       // Find the conversation involving both the current user and the other user
-      const foundConvo = MOCK_CONVERSATIONS.find(c => 
+      const foundConvo = MOCK_CONVERSATIONS.find(c =>
         (c.consumerId === user.id && c.workerId === otherUserId) ||
         (c.workerId === user.id && c.consumerId === otherUserId)
       );
-      setConversation(foundConvo);
+      setConversation(foundConvo || null);
 
-      // Find the other user's details
-      const allUsers = [...MOCK_USERS, ...MOCK_WORKERS.map(w => ({...w, id: w.userId}))]; // Combine for searching
-      const foundOtherUser = allUsers.find(u => u.id === otherUserId);
-      if (foundOtherUser) {
+      // Find the other user's details - check users first, then workers
+      const foundUser = MOCK_USERS.find(u => u.id === otherUserId);
+      if (foundUser) {
         setOtherUser({
-          id: foundOtherUser.id,
-          firstName: foundOtherUser.firstName || foundOtherUser.name,
-          lastName: foundOtherUser.lastName || '',
-          profileImage: foundOtherUser.avatar,
-          email: foundOtherUser.email,
+          id: foundUser.id,
+          firstName: foundUser.firstName,
+          lastName: foundUser.lastName,
+          profileImage: foundUser.avatar,
+          email: foundUser.email,
         });
+      } else {
+        const foundWorker = MOCK_WORKERS.find(w => w.userId === otherUserId);
+        if (foundWorker) {
+          const nameParts = foundWorker.name.split(' ');
+          setOtherUser({
+            id: foundWorker.userId,
+            firstName: nameParts[0] || '',
+            lastName: nameParts.slice(1).join(' ') || '',
+            profileImage: foundWorker.avatar,
+            email: '',
+          });
+        }
       }
     }
   }, [user, otherUserId]);
@@ -52,7 +69,6 @@ export default function ChatPage() {
     );
   }
   
-  const otherUserRole = currentUserRole === "consumer" ? "worker" : "consumer";
   const otherUserName = `${otherUser.firstName} ${otherUser.lastName}`;
 
   return (
@@ -60,20 +76,17 @@ export default function ChatPage() {
       <div className="h-full flex relative">
         <div className="hidden lg:block lg:w-96 flex-shrink-0 h-full">
           <ChatSidebar
-            currentUserId={user.id}
-            currentUserRole={currentUserRole}
+            currentUserRole={currentUserRole as "consumer" | "worker"}
           />
         </div>
         <div className="flex-1 h-full">
           <ChatWindow
             conversationId={conversation.id}
-            userId={otherUser.id}
             userName={otherUserName}
             userImage={otherUser.profileImage}
-            userRole={otherUserRole}
-            isOnline={true} // Mock online status
+            isOnline={true}
             currentUserId={user.id}
-            currentUserRole={currentUserRole}
+            currentUserRole={currentUserRole as "consumer" | "worker"}
           />
         </div>
       </div>
