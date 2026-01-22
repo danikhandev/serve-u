@@ -125,6 +125,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(PERSPECTIVE_STORAGE_KEY);
     document.cookie = "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "auth-user-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }, []);
 
   const refetch = useCallback(async () => {
