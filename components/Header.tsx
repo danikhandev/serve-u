@@ -30,7 +30,7 @@ const SERVICE_CATEGORIES = [
     id: "cleaning",
     name: "Cleaning",
     slug: "cleaning",
-    icon: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>, 
+    icon: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>,
     description: "Home and office cleaning services.",
     popular: ["Standard Clean", "Deep Clean", "Move-out Clean"]
   },
@@ -68,7 +68,7 @@ export default function Header() {
   const [activeCategory, setActiveCategory] = useState<typeof SERVICE_CATEGORIES[0] | null>(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const { user, logout, activePerspective, switchPerspective } = useUser();
   const router = useRouter();
 
@@ -117,23 +117,16 @@ export default function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
             ? "bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-100"
             : "bg-white/80 backdrop-blur-md border-b border-transparent"
-        }`}
+          }`}
       >
         <nav className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg"
-              >
-                <Shield className="w-6 h-6 text-white" />
-              </motion.div>
+
               <span
                 className={`${unbounded.className} text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors`}
               >
@@ -143,7 +136,7 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              
+
               {/* Find a Service Mega Menu */}
               <div
                 className="relative"
@@ -153,16 +146,14 @@ export default function Header() {
                   setActiveCategory(null);
                 }}
               >
-                <button 
-                  className={`flex items-center gap-1 transition-colors font-medium text-sm group ${
-                    activeDropdown === "find-service" ? "text-primary" : "text-gray-600 hover:text-primary"
-                  }`}
+                <button
+                  className={`flex items-center gap-1 transition-colors font-medium text-sm group ${activeDropdown === "find-service" ? "text-primary" : "text-gray-600 hover:text-primary"
+                    }`}
                 >
                   Find a Service
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      activeDropdown === "find-service" ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === "find-service" ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -181,11 +172,10 @@ export default function Header() {
                           <button
                             key={cat.id}
                             onMouseEnter={() => setActiveCategory(cat)}
-                            className={`w-full text-left px-6 py-3 text-sm font-medium flex items-center justify-between group transition-colors ${
-                              activeCategory?.id === cat.id
+                            className={`w-full text-left px-6 py-3 text-sm font-medium flex items-center justify-between group transition-colors ${activeCategory?.id === cat.id
                                 ? "bg-white text-primary border-l-4 border-primary"
                                 : "text-gray-600 hover:bg-gray-100 hover:text-primary border-l-4 border-transparent"
-                            }`}
+                              }`}
                           >
                             <span className="flex items-center gap-3">
                               <cat.icon className="w-4 h-4" />
@@ -214,7 +204,7 @@ export default function Header() {
                               </h3>
                             </div>
                             <p className="text-gray-500 text-sm mb-6">{activeCategory.description}</p>
-                            
+
                             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                               Popular Services
                             </h4>
@@ -230,7 +220,7 @@ export default function Header() {
                               ))}
                             </div>
 
-                            <Link 
+                            <Link
                               href={`/search?category=${activeCategory.slug}`}
                               className="inline-flex items-center justify-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors w-fit"
                             >
@@ -288,7 +278,7 @@ export default function Header() {
                   {/* Switch Roles Button (If user is also a worker) */}
                   {user.isUserSignUpForWorker && (
                     <div className="relative">
-                      <button 
+                      <button
                         onClick={() => handleSwitchPerspective(activePerspective === "consumer" ? "worker" : "consumer")}
                         className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors"
                       >
@@ -308,7 +298,7 @@ export default function Header() {
                   </button>
 
                   {/* User Profile */}
-                  <div 
+                  <div
                     className="relative"
                     onMouseEnter={() => setShowProfileMenu(true)}
                     onMouseLeave={() => setShowProfileMenu(false)}
@@ -316,10 +306,10 @@ export default function Header() {
                     <button className="flex items-center gap-2 pl-2">
                       <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold border border-primary/20 overflow-hidden">
                         {user.avatar ? (
-                          <img 
-                            src={user.avatar} 
-                            alt="Profile" 
-                            className="w-full h-full object-cover" 
+                          <img
+                            src={user.avatar}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
                           <User2 className="w-5 h-5" />
@@ -327,7 +317,7 @@ export default function Header() {
                       </div>
                       <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${showProfileMenu ? "rotate-180" : ""}`} />
                     </button>
-                    
+
                     <AnimatePresence>
                       {showProfileMenu && (
                         <motion.div
@@ -343,23 +333,23 @@ export default function Header() {
                             </p>
                             <p className="text-xs text-gray-500 truncate">{user.email}</p>
                           </div>
-                          
+
                           <Link href={currentDashboardLink} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
                             <LayoutDashboard className="w-4 h-4" />
                             Dashboard
                           </Link>
-                          
+
                           {/* Worker Link in Menu */}
                           {user.isUserSignUpForWorker ? (
-                             <Link href="/worker/dashboard" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
-                               <Briefcase className="w-4 h-4" />
-                               Worker Dashboard
-                             </Link>
+                            <Link href="/worker/dashboard" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+                              <Briefcase className="w-4 h-4" />
+                              Worker Dashboard
+                            </Link>
                           ) : (
-                             <Link href="/worker/onboarding" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
-                               <Hammer className="w-4 h-4" />
-                               Become a Worker
-                             </Link>
+                            <Link href="/worker/onboarding" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+                              <Hammer className="w-4 h-4" />
+                              Become a Worker
+                            </Link>
                           )}
 
                           <div className="border-t border-gray-100 mt-1 pt-1">
@@ -436,7 +426,7 @@ export default function Header() {
                   </Link>
                 ))}
               </div>
-              
+
               <div className="border-t border-gray-100 pt-6 space-y-4">
                 <Link href="/how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="block text-lg font-medium text-gray-800">
                   How it Works
@@ -452,15 +442,15 @@ export default function Header() {
             <div className="py-8 border-t border-gray-100">
               {user ? (
                 <div className="space-y-3">
-                  <Link 
-                    href={currentDashboardLink} 
+                  <Link
+                    href={currentDashboardLink}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-center gap-2 w-full py-3 bg-primary text-white rounded-xl font-medium"
                   >
                     <LayoutDashboard className="w-5 h-5" />
                     Dashboard
                   </Link>
-                  <button 
+                  <button
                     onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
                     className="flex items-center justify-center gap-2 w-full py-3 border border-gray-200 rounded-xl font-medium text-red-600"
                   >
@@ -470,14 +460,14 @@ export default function Header() {
                 </div>
               ) : (
                 <div className="flex gap-4">
-                  <Link 
+                  <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex-1 py-3 text-center border border-gray-200 rounded-xl font-medium"
                   >
                     Sign In
                   </Link>
-                  <Link 
+                  <Link
                     href="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex-1 py-3 text-center bg-primary text-white rounded-xl font-medium"

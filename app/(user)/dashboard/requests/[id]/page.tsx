@@ -13,15 +13,15 @@ const mockRequests = [
   {
     id: "req-1",
     service: "Emergency Leak Repair",
-    worker: "Sarah Smith",
+    worker: "Haroon Ahmed",
     status: "IN_PROGRESS",
     date: "2026-01-15T14:00:00Z",
     price: 150,
     description: "There is a major leak under the kitchen sink. The cabinet is already flooded. Need urgent assistance.",
     timeline: [
       { status: "PENDING", date: "2026-01-15T13:30:00Z", note: "Request sent to worker." },
-      { status: "ACCEPTED", date: "2026-01-15T13:35:00Z", note: "Sarah accepted the job." },
-      { status: "IN_PROGRESS", date: "2026-01-15T13:55:00Z", note: "Sarah is on her way." }
+      { status: "ACCEPTED", date: "2026-01-15T13:35:00Z", note: "Haroon accepted the job." },
+      { status: "IN_PROGRESS", date: "2026-01-15T13:55:00Z", note: "Haroon is on her way." }
     ]
   },
   // Add other mock requests if needed for direct navigation testing
@@ -79,7 +79,7 @@ export default function RequestDetailPage() {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
@@ -92,17 +92,17 @@ export default function RequestDetailPage() {
               <span>{new Date(request.date).toLocaleString()}</span>
             </div>
           </div>
-          
+
           <h3 className="text-lg font-bold text-gray-800 mb-4">Job Details</h3>
           <p className="text-gray-600 leading-relaxed mb-8">{request.description}</p>
-          
+
           <h3 className="text-lg font-bold text-gray-800 mb-4">Timeline</h3>
           <div className="space-y-6">
             {request.timeline.map((item: TimelineItem, index: number) => (
               <div key={index} className="flex gap-4">
                 <div className="relative">
                   <div className={`w-3 h-3 rounded-full mt-1 ${getStatusInfo(item.status).color.replace('text-', 'bg-')}`}></div>
-                  {index < request.timeline.length - 1 && 
+                  {index < request.timeline.length - 1 &&
                     <div className="absolute left-1/2 -translate-x-1/2 top-4 h-full w-0.5 bg-gray-200"></div>
                   }
                 </div>
@@ -118,14 +118,14 @@ export default function RequestDetailPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
           >
             <h3 className="font-bold text-lg mb-4">Worker Details</h3>
             <div className="flex items-center gap-4 mb-6">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt={request.worker} className="w-12 h-12 rounded-full"/>
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Haroon" alt={request.worker} className="w-12 h-12 rounded-full" />
               <div>
                 <p className="font-semibold text-gray-900">{request.worker}</p>
                 <div className="flex items-center gap-1 text-sm">
@@ -138,7 +138,7 @@ export default function RequestDetailPage() {
             </button>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}

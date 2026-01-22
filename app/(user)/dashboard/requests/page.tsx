@@ -10,7 +10,7 @@ const mockRequests = [
   {
     id: "req-1",
     service: "Emergency Leak Repair",
-    worker: "Sarah Smith",
+    worker: "Haroon Ahmed",
     status: "IN_PROGRESS",
     date: "2026-01-15T14:00:00Z",
     price: 150,
@@ -18,7 +18,7 @@ const mockRequests = [
   {
     id: "req-2",
     service: "Lighting Installation",
-    worker: "Mike Ross",
+    worker: "Haroon Ahmed",
     status: "PENDING",
     date: "2026-01-16T10:00:00Z",
     price: 120,
@@ -42,7 +42,7 @@ const mockRequests = [
   {
     id: "req-5",
     service: "Custom Carpentry",
-    worker: "Mike Ross",
+    worker: "Haroon Ahmed",
     status: "CANCELLED",
     date: "2026-01-02T12:00:00Z",
     price: 500,
@@ -59,7 +59,7 @@ const statusConfig = {
 export default function MyRequestsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filteredRequests = mockRequests.filter(req => 
+  const filteredRequests = mockRequests.filter(req =>
     activeFilter === "All" || req.status === activeFilter
   );
 
@@ -73,14 +73,13 @@ export default function MyRequestsPage() {
       {/* Filters */}
       <div className="my-6 flex flex-wrap gap-2">
         {["All", "PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"].map(filter => (
-          <button 
+          <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-              activeFilter === filter 
-                ? "bg-primary text-white shadow" 
-                : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
-            }`}
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === filter
+              ? "bg-primary text-white shadow"
+              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+              }`}
           >
             {filter === "IN_PROGRESS" ? "In Progress" : filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase()}
           </button>
@@ -93,7 +92,7 @@ export default function MyRequestsPage() {
           {filteredRequests.length > 0 ? filteredRequests.map((req, index) => {
             const { icon: Icon, color, label } = statusConfig[req.status as keyof typeof statusConfig];
             return (
-              <motion.div 
+              <motion.div
                 key={req.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
