@@ -13,20 +13,20 @@ export default function UserDashboardPage() {
   const activeRequests = [
     {
       id: "req-1",
-      worker: "Sarah Smith",
+      worker: "Haroon Ahmed",
       service: "Leak Repair",
       status: "IN_PROGRESS",
       date: "Today, 2:00 PM",
-      price: "$150",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+      price: "1500 PKR",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Haroon"
     },
     {
       id: "req-2",
-      worker: "Mike Ross",
+      worker: "Haroon Ahmed",
       service: "Lighting Install",
       status: "PENDING",
       date: "Tomorrow, 10:00 AM",
-      price: "$120",
+      price: "1200 PKR",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mike"
     }
   ];
@@ -41,7 +41,7 @@ export default function UserDashboardPage() {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-gray-900 mb-2">My Dashboard</h1>
-          <p className="text-gray-500">Welcome back, Alex!</p>
+          <p className="text-gray-500">Welcome back</p>
         </motion.div>
 
         {/* Stats Row */}
@@ -90,7 +90,7 @@ export default function UserDashboardPage() {
                 View All
               </Link>
             </div>
-            
+
             <div className="space-y-4">
               {activeRequests.map((req) => (
                 <div key={req.id} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 hover:border-primary/20 transition-colors">
@@ -100,9 +100,8 @@ export default function UserDashboardPage() {
                     <p className="text-sm text-gray-500">{req.worker}</p>
                   </div>
                   <div className="text-right">
-                    <div className={`text-xs font-bold px-2 py-1 rounded-full mb-1 inline-block ${
-                      req.status === "IN_PROGRESS" ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"
-                    }`}>
+                    <div className={`text-xs font-bold px-2 py-1 rounded-full mb-1 inline-block ${req.status === "IN_PROGRESS" ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"
+                      }`}>
                       {req.status.replace("_", " ")}
                     </div>
                     <p className="text-xs text-gray-500">{req.date}</p>
@@ -128,7 +127,7 @@ export default function UserDashboardPage() {
                 <h3 className="font-medium text-gray-900">View History</h3>
               </Link>
             </div>
-            
+
             <div className="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-100">
               <div className="flex gap-3">
                 <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />

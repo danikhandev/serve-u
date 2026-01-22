@@ -30,7 +30,7 @@ export default function AdminDashboardPage() {
     {
       icon: DollarSign,
       label: 'Total Revenue',
-      value: '$12.4k',
+      value: '120k PKR',
       change: '+8% vs last week',
       color: 'from-primary to-accent',
     },
@@ -44,7 +44,7 @@ export default function AdminDashboardPage() {
       documents: 4,
     },
     {
-      name: 'Sarah Chen',
+      name: 'Haroon',
       category: 'Electrical',
       registeredDate: '5 hours ago',
       documents: 3,
@@ -73,7 +73,7 @@ export default function AdminDashboardPage() {
     },
     {
       consumer: 'Emma Davis',
-      worker: 'Sarah Chen',
+      worker: 'Haroon',
       service: 'Install Ceiling Fan',
       time: 'Today, 3:30 PM',
       status: 'pending',
@@ -184,19 +184,17 @@ export default function AdminDashboardPage() {
               <div className="space-y-4">
                 {recentJobs.map((job, index) => (
                   <div key={index} className="flex items-start gap-3 pb-4 border-b border-primary/10 last:border-0">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      job.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
-                    }`} />
+                    <div className={`w-2 h-2 rounded-full mt-2 ${job.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
+                      }`} />
                     <div className="flex-1">
                       <p className="text-sm text-foreground font-medium">{job.service}</p>
                       <p className="text-xs text-foreground/60 mt-1">{job.consumer} → {job.worker}</p>
                       <p className="text-xs text-foreground/40 mt-1">{job.time}</p>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      job.status === 'pending'
-                        ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                        : 'bg-green-50 text-green-700 border border-green-200'
-                    }`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${job.status === 'pending'
+                      ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                      : 'bg-green-50 text-green-700 border border-green-200'
+                      }`}>
                       {job.status}
                     </span>
                   </div>

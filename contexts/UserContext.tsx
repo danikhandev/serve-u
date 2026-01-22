@@ -40,23 +40,23 @@ const USER_STORAGE_KEY = "serve_u_user_data";
 const PERSPECTIVE_STORAGE_KEY = "serve_u_user_perspective";
 
 // MOCK STATIC USERS
-const MOCK_ALEX_CONSUMER: User = {
+const MOCK_Danyal_CONSUMER: User = {
   id: "user-1",
-  email: "alex@example.com",
-  firstName: "Alex",
+  email: "danyal@gmail.com",
+  firstName: "Danyal",
   lastName: "Consumer",
-  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Danyal",
   isUserSignUpForWorker: false,
   isEmailVerified: true,
   idVerificationStatus: "VERIFIED",
 };
 
-const MOCK_SARAH_WORKER: User = {
+const MOCK_Haroon_WORKER: User = {
   id: "user-2",
-  email: "sarah@example.com",
-  firstName: "Sarah",
+  email: "haroon@gmail.com",
+  firstName: "Haroon",
   lastName: "Worker",
-  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Haroon",
   isUserSignUpForWorker: true, // This user is also a worker
   isEmailVerified: true,
   idVerificationStatus: "VERIFIED",
@@ -96,10 +96,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     // Simulate API call
     setTimeout(() => {
       let loggedInUser: User | null = null;
-      if (email === MOCK_ALEX_CONSUMER.email) {
-        loggedInUser = MOCK_ALEX_CONSUMER;
-      } else if (email === MOCK_SARAH_WORKER.email) {
-        loggedInUser = MOCK_SARAH_WORKER;
+      if (email === MOCK_Danyal_CONSUMER.email) {
+        loggedInUser = MOCK_Danyal_CONSUMER;
+      } else if (email === MOCK_Haroon_WORKER.email) {
+        loggedInUser = MOCK_Haroon_WORKER;
       }
 
       if (loggedInUser) {
@@ -113,7 +113,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem(PERSPECTIVE_STORAGE_KEY, "consumer");
         }
       } else {
-        setError("Invalid credentials or user not found. Try alex@example.com or sarah@example.com");
+        setError("Invalid credentials or user not found. Try danyal@gmail.com or haroon@gmail.com");
       }
       setLoading(false);
     }, 800);
@@ -144,7 +144,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       setActivePerspective(perspective);
       localStorage.setItem(PERSPECTIVE_STORAGE_KEY, perspective);
     }
-     // Admin perspective is handled separately by AdminContext
+    // Admin perspective is handled separately by AdminContext
   }, [user]);
 
   const clearAllUsers = useCallback(() => {

@@ -15,7 +15,7 @@ export default function WorkerDashboardPage() {
   ];
 
   const newJobRequests = [
-    { id: "job-1", service: "Kitchen Sink Repair", consumer: "Alex Consumer", date: "Today, 5:00 PM" },
+    { id: "job-1", service: "Kitchen Sink Repair", consumer: "Danyal Consumer", date: "Today, 5:00 PM" },
     { id: "job-2", service: "Ceiling Fan Installation", consumer: "Jane Doe", date: "Tomorrow, 11:00 AM" },
   ];
 
@@ -27,9 +27,9 @@ export default function WorkerDashboardPage() {
       </motion.div>
 
       {/* Onboarding Checklist Reminder */}
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
         className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 flex items-center justify-between"
       >
@@ -44,7 +44,7 @@ export default function WorkerDashboardPage() {
           Continue
         </Link>
       </motion.div>
-      
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-8">
         {stats.map((stat, index) => (
@@ -79,7 +79,7 @@ export default function WorkerDashboardPage() {
                 <p className="text-sm text-gray-500">From {job.consumer}</p>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-500 flex items-center gap-2"><Calendar className="w-4 h-4"/> {job.date}</span>
+                <span className="text-sm text-gray-500 flex items-center gap-2"><Calendar className="w-4 h-4" /> {job.date}</span>
                 <Link href={`/worker/jobs/${job.id}`} className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors">
                   View Details
                 </Link>

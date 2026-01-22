@@ -10,7 +10,7 @@ const mockWorkerJobs = [
   {
     id: "job-1",
     service: "Kitchen Sink Repair",
-    consumer: "Alex Consumer",
+    consumer: "Danyal Consumer",
     status: "PENDING", // Worker needs to accept/reject
     date: "2026-01-15T17:00:00Z",
     price: 150,
@@ -60,7 +60,7 @@ const statusConfig = {
 export default function WorkerJobsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filteredJobs = mockWorkerJobs.filter(job => 
+  const filteredJobs = mockWorkerJobs.filter(job =>
     activeFilter === "All" || job.status === activeFilter
   );
 
@@ -74,14 +74,13 @@ export default function WorkerJobsPage() {
       {/* Filters */}
       <div className="my-6 flex flex-wrap gap-2">
         {["All", "PENDING", "ACCEPTED", "IN_PROGRESS", "COMPLETED", "CANCELLED"].map(filter => (
-          <button 
+          <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-              activeFilter === filter 
-                ? "bg-primary text-white shadow" 
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === filter
+                ? "bg-primary text-white shadow"
                 : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
-            }`}
+              }`}
           >
             {filter.replace("_", " ").split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </button>
@@ -94,7 +93,7 @@ export default function WorkerJobsPage() {
           {filteredJobs.length > 0 ? filteredJobs.map((job, index) => {
             const { icon: Icon, color, label } = statusConfig[job.status as keyof typeof statusConfig];
             return (
-              <motion.div 
+              <motion.div
                 key={job.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}

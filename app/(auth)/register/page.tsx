@@ -172,7 +172,7 @@ function RegisterContent() {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
                       className="w-full pl-12 pr-4 py-3 rounded-lg border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white"
-                      placeholder="john@example.com"
+                      placeholder="john@gmail.com"
                     />
                   </div>
                 </div>

@@ -21,7 +21,7 @@ import { MOCK_USERS } from "@/constants/mockData";
 export default function LoginPage() {
   const { login } = useUser();
   const router = useRouter();
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -49,13 +49,13 @@ export default function LoginPage() {
 
     if (foundUser && formData.password === "12345678") {
       const role = foundUser.isUserSignUpForWorker ? "worker" : "user";
-      
+
       // Set cookie
       document.cookie = `auth-user-token=${role}; path=/; max-age=86400;`; // Expires in 24 hours
 
       // Update context state
       await login(formData.email);
-      
+
       // Redirect based on role
       if (foundUser.isUserSignUpForWorker) {
         router.push("/worker/dashboard");
@@ -109,7 +109,7 @@ export default function LoginPage() {
                     }
                     required
                     className="w-full pl-12 pr-4 py-3 rounded-lg border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white"
-                    placeholder="alex@example.com or sarah@example.com"
+                    placeholder="danyal@gmail.com or haroon@gmail.com"
                   />
                 </div>
               </div>

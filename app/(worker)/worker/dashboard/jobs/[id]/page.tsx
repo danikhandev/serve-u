@@ -14,7 +14,7 @@ const mockWorkerJobs = [
   {
     id: "job-1",
     service: "Kitchen Sink Repair",
-    consumer: "Alex Consumer",
+    consumer: "Danyal Consumer",
     consumerId: "user-1",
     status: "PENDING", // Worker needs to accept/reject
     date: "2026-01-15T17:00:00Z",
@@ -26,7 +26,7 @@ const mockWorkerJobs = [
     ],
     location: "123 Main St, Sydney NSW",
     timeline: [
-      { status: "PENDING", date: "2026-01-15T16:45:00Z", note: "Request received from Alex Consumer." },
+      { status: "PENDING", date: "2026-01-15T16:45:00Z", note: "Request received from Danyal Consumer." },
     ]
   },
   {
@@ -136,7 +136,7 @@ export default function JobDetailPage() {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
@@ -149,7 +149,7 @@ export default function JobDetailPage() {
               <span>{new Date(job.date).toLocaleString()}</span>
             </div>
           </div>
-          
+
           <h3 className="text-lg font-bold text-gray-800 mb-4">Description</h3>
           <p className="text-gray-600 leading-relaxed mb-8">{job.description}</p>
 
@@ -175,7 +175,7 @@ export default function JobDetailPage() {
               <div key={index} className="flex gap-4">
                 <div className="relative">
                   <div className={`w-3 h-3 rounded-full mt-1 ${statusConfig[item.status as keyof typeof statusConfig].color.replace('text-', 'bg-')}`}></div>
-                  {index < job.timeline.length - 1 && 
+                  {index < job.timeline.length - 1 &&
                     <div className="absolute left-1/2 -translate-x-1/2 top-4 h-full w-0.5 bg-gray-200"></div>
                   }
                 </div>
@@ -191,7 +191,7 @@ export default function JobDetailPage() {
 
         {/* Sidebar Actions */}
         <div className="space-y-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
@@ -224,7 +224,7 @@ export default function JobDetailPage() {
             </Link>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
@@ -232,7 +232,7 @@ export default function JobDetailPage() {
           >
             <h3 className="font-bold text-lg mb-4">Consumer Info</h3>
             <div className="flex items-center gap-4">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" alt={job.consumer} className="w-12 h-12 rounded-full"/>
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Danyal" alt={job.consumer} className="w-12 h-12 rounded-full" />
               <div>
                 <p className="font-semibold text-gray-900">{job.consumer}</p>
                 <p className="text-sm text-gray-500">ID: {job.consumerId}</p>
